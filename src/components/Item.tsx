@@ -11,7 +11,11 @@ const Item: React.FC<ItemProps> = ({ num }) => {
     border: '1px solid #000',
   };
 
-  return <div style={style}>{num}</div>;
+  return (
+    <div style={style} className="item">
+      {num}
+    </div>
+  );
 };
 
 export default Item;
