@@ -10,9 +10,14 @@ type MasonryLayoutProps = {
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap }) => {
+  const masonryLayoutRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
+
+  useEffect(() => {
+    console.log(masonryLayoutRef);
+  }, []);
 
   // Brick 컴포넌트 설정
   useEffect(() => {
@@ -38,7 +43,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   }, [wrapRefs, columnGap, rowGap]);
 
   return (
-    <div id="masonry">
+    <div id="masonry" ref={masonryLayoutRef}>
       <Container containerRef={containerRef}>
         {React.Children.map(children, (child, index) => {
           return (
