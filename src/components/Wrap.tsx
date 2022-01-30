@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-const Wrap: React.FC = ({ children }) => {
-  return <div className="wrap">{children}</div>;
+type WrapProps = {
+  wrapRefs: React.RefObject<HTMLDivElement>[];
+};
+
+const Wrap: React.FC<WrapProps> = ({ children, wrapRefs }) => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  wrapRefs.push(wrapRef);
+
+  return (
+    <div className="wrap" ref={wrapRef}>
+      {children}
+    </div>
+  );
 };
 
 export default Wrap;

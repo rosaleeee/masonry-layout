@@ -5,10 +5,12 @@ import Wrap from './Wrap';
 
 const MasonryLayout: React.FC = ({ children }) => {
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
+  const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
 
   useEffect(() => {
     console.log(brickRefs);
-  }, [brickRefs]);
+    console.log(wrapRefs);
+  }, [brickRefs, wrapRefs]);
 
   return (
     <div id="masonry">
@@ -16,7 +18,7 @@ const MasonryLayout: React.FC = ({ children }) => {
         {React.Children.map(children, (child, index) => {
           return (
             <Brick key={index} brickRefs={brickRefs}>
-              <Wrap>{child}</Wrap>
+              <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
             </Brick>
           );
         })}
