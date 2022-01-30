@@ -74,6 +74,31 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     };
   }, [columnWidth, columnGap, currentColumnCount]);
 
+  // Brick 컴포넌트 배치하기
+  useEffect(() => {
+    if (!currentColumnCount) return;
+
+    const rowPos = Array(currentColumnCount).fill(0);
+    const columnPos = Array(currentColumnCount).fill(0);
+    const cellWidth = columnWidth + columnGap;
+
+    rowPos.forEach((_, index) => (rowPos[index] = cellWidth * index));
+
+    brickRefs.forEach((el) => {
+      const brickEl = el.current;
+      const minIndex = columnPos.findIndex((v) => v === Math.min.apply(null, columnPos));
+
+      const posX = rowPos[minIndex];
+      const posY = columnPos[minIndex];
+
+      if (brickEl) {
+        brickEl.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px)';
+
+        columnPos[minIndex] += brickEl?.clientHeight;
+      }
+    });
+  }, [currentColumnCount, brickRefs, columnWidth, columnGap]);
+
   return (
     <div id="masonry" ref={masonryLayoutRef}>
       <Container containerRef={containerRef}>
