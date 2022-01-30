@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 type WrapProps = {
   wrapRefs: React.RefObject<HTMLDivElement>[];
@@ -6,7 +6,10 @@ type WrapProps = {
 
 const Wrap: React.FC<WrapProps> = ({ children, wrapRefs }) => {
   const wrapRef = useRef<HTMLDivElement>(null);
-  wrapRefs.push(wrapRef);
+
+  useEffect(() => {
+    wrapRefs.push(wrapRef);
+  }, [wrapRefs]);
 
   return (
     <div className="wrap" ref={wrapRef}>
