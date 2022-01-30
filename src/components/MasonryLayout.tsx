@@ -34,6 +34,9 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
       const wrapEl = wrapRefs[index].current;
 
       if (el.current && wrapEl) {
+        el.current.style.position = 'absolute';
+        el.current.style.left = 0 + 'px';
+        el.current.style.top = 0 + 'px';
         el.current.style.width = columnWidth + 'px';
         el.current.style.height = wrapEl.clientHeight + 'px';
       }
