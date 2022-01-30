@@ -4,7 +4,7 @@ import MasonryLayout from './components/MasonryLayout';
 
 const App: React.FC = () => {
   return (
-    <MasonryLayout>
+    <MasonryLayout columnWidth={270} columnGap={20} rowGap={30}>
       <Item num={1} />
       <Item num={2} />
       <Item num={3} />

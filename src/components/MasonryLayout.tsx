@@ -3,7 +3,13 @@ import Brick from './Brick';
 import Container from './Container';
 import Wrap from './Wrap';
 
-const MasonryLayout: React.FC = ({ children }) => {
+type MasonryLayoutProps = {
+  columnWidth: number;
+  columnGap: number;
+  rowGap: number;
+};
+
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
