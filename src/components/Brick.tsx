@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 type BrickProps = {
   brickRefs: React.RefObject<HTMLDivElement>[];
@@ -6,7 +6,10 @@ type BrickProps = {
 
 const Brick: React.FC<BrickProps> = ({ children, brickRefs }) => {
   const brickRef = useRef<HTMLDivElement>(null);
-  brickRefs.push(brickRef);
+
+  useEffect(() => {
+    brickRefs.push(brickRef);
+  }, [brickRefs]);
 
   return (
     <div className="brick" ref={brickRef}>
