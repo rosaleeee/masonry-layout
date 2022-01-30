@@ -32,16 +32,17 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   useEffect(() => {
     brickRefs.forEach((el, index) => {
       const wrapEl = wrapRefs[index].current;
+      const cellWidth = columnWidth + columnGap;
 
       if (el.current && wrapEl) {
         el.current.style.position = 'absolute';
         el.current.style.left = 0 + 'px';
         el.current.style.top = 0 + 'px';
-        el.current.style.width = columnWidth + 'px';
+        el.current.style.width = cellWidth + 'px';
         el.current.style.height = wrapEl.clientHeight + 'px';
       }
     });
-  }, [brickRefs, wrapRefs, columnWidth]);
+  }, [brickRefs, wrapRefs, columnWidth, columnGap]);
 
   // Container 컴포넌트 설정
   useEffect(() => {
