@@ -20,10 +20,12 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   // Wrap 컴포넌트 설정
   useEffect(() => {
     wrapRefs.forEach((el) => {
-      if (el.current) {
-        el.current.style.paddingLeft = columnGap / 2 + 'px';
-        el.current.style.paddingRight = columnGap / 2 + 'px';
-        el.current.style.paddingBottom = rowGap + 'px';
+      const wrapEl = el.current;
+
+      if (wrapEl) {
+        wrapEl.style.paddingLeft = columnGap / 2 + 'px';
+        wrapEl.style.paddingRight = columnGap / 2 + 'px';
+        wrapEl.style.paddingBottom = rowGap + 'px';
       }
     });
   }, [wrapRefs, columnGap, rowGap]);
@@ -31,15 +33,16 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   // Brick 컴포넌트 설정
   useEffect(() => {
     brickRefs.forEach((el, index) => {
+      const brickEl = el.current;
       const wrapEl = wrapRefs[index].current;
       const cellWidth = columnWidth + columnGap;
 
-      if (el.current && wrapEl) {
-        el.current.style.position = 'absolute';
-        el.current.style.left = 0 + 'px';
-        el.current.style.top = 0 + 'px';
-        el.current.style.width = cellWidth + 'px';
-        el.current.style.height = wrapEl.clientHeight + 'px';
+      if (brickEl && wrapEl) {
+        brickEl.style.position = 'absolute';
+        brickEl.style.left = 0 + 'px';
+        brickEl.style.top = 0 + 'px';
+        brickEl.style.width = cellWidth + 'px';
+        brickEl.style.height = wrapEl.clientHeight + 'px';
       }
     });
   }, [brickRefs, wrapRefs, columnWidth, columnGap]);
