@@ -74,7 +74,6 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     };
   }, [columnWidth, columnGap, currentColumnCount]);
 
-  // Brick 컴포넌트 배치하기
   useEffect(() => {
     if (!currentColumnCount) return;
 
@@ -84,6 +83,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
 
     rowPos.forEach((_, index) => (rowPos[index] = cellWidth * index));
 
+    // Brick 컴포넌트 배치하기
     brickRefs.forEach((el) => {
       const brickEl = el.current;
       const minIndex = columnPos.findIndex((v) => v === Math.min.apply(null, columnPos));
@@ -97,7 +97,17 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
         columnPos[minIndex] += brickEl?.clientHeight;
       }
     });
-  }, [currentColumnCount, brickRefs, columnWidth, columnGap]);
+
+    // Container 컴포넌트 크기 설정
+    const containerEl = containerRef.current;
+    if (containerEl) {
+      const containerWidth = cellWidth * currentColumnCount;
+      const containerHeight = Math.max.apply(null, columnPos);
+
+      containerEl.style.width = containerWidth + 'px';
+      containerEl.style.height = containerHeight + 'px';
+    }
+  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap]);
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
