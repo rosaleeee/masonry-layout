@@ -43,6 +43,15 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     });
   }, [brickRefs, wrapRefs, columnWidth]);
 
+  // Container 컴포넌트 설정
+  useEffect(() => {
+    const containerEl = containerRef.current;
+
+    if (containerEl) {
+      containerEl.style.position = 'relative';
+    }
+  }, []);
+
   // 칼럼 개수 설정
   useEffect(() => {
     const masonryLayoutEl = masonryLayoutRef.current;
