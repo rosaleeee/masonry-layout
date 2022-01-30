@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Brick from './Brick';
 import Container from './Container';
 import Wrap from './Wrap';
@@ -10,14 +10,34 @@ type MasonryLayoutProps = {
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap }) => {
+  const [currentColumnCount, setCurrentColumnCount] = useState(0);
+
   const masonryLayoutRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
 
+  // 칼럼 개수 설정
   useEffect(() => {
-    console.log(masonryLayoutRef);
-  }, []);
+    const masonryLayoutEl = masonryLayoutRef.current;
+
+    function setColumnCount() {
+      if (masonryLayoutEl) {
+        const cellWidth = columnWidth + columnGap;
+        const nextColumnCount = Math.floor(masonryLayoutEl.clientWidth / cellWidth);
+
+        if (nextColumnCount !== currentColumnCount) {
+          setCurrentColumnCount(nextColumnCount);
+        }
+      }
+    }
+
+    setColumnCount();
+    window.addEventListener('resize', setColumnCount);
+    return () => {
+      window.removeEventListener('resize', setColumnCount);
+    };
+  }, [columnWidth, columnGap, currentColumnCount]);
 
   // Brick 컴포넌트 설정
   useEffect(() => {
