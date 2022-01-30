@@ -17,6 +17,29 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
 
+  // Wrap 컴포넌트 설정
+  useEffect(() => {
+    wrapRefs.forEach((el) => {
+      if (el.current) {
+        el.current.style.paddingLeft = columnGap / 2 + 'px';
+        el.current.style.paddingRight = columnGap / 2 + 'px';
+        el.current.style.paddingBottom = rowGap + 'px';
+      }
+    });
+  }, [wrapRefs, columnGap, rowGap]);
+
+  // Brick 컴포넌트 설정
+  useEffect(() => {
+    brickRefs.forEach((el, index) => {
+      const wrapEl = wrapRefs[index].current;
+
+      if (el.current && wrapEl) {
+        el.current.style.width = columnWidth + 'px';
+        el.current.style.height = wrapEl.clientHeight + 'px';
+      }
+    });
+  }, [brickRefs, wrapRefs, columnWidth]);
+
   // 칼럼 개수 설정
   useEffect(() => {
     const masonryLayoutEl = masonryLayoutRef.current;
@@ -38,29 +61,6 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
       window.removeEventListener('resize', setColumnCount);
     };
   }, [columnWidth, columnGap, currentColumnCount]);
-
-  // Brick 컴포넌트 설정
-  useEffect(() => {
-    brickRefs.forEach((el, index) => {
-      const wrapEl = wrapRefs[index].current;
-
-      if (el.current && wrapEl) {
-        el.current.style.width = columnWidth + 'px';
-        el.current.style.height = wrapEl.clientHeight + 'px';
-      }
-    });
-  }, [brickRefs, wrapRefs, columnWidth]);
-
-  // Wrap 컴포넌트 설정
-  useEffect(() => {
-    wrapRefs.forEach((el) => {
-      if (el.current) {
-        el.current.style.paddingLeft = columnGap / 2 + 'px';
-        el.current.style.paddingRight = columnGap / 2 + 'px';
-        el.current.style.paddingBottom = rowGap + 'px';
-      }
-    });
-  }, [wrapRefs, columnGap, rowGap]);
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
