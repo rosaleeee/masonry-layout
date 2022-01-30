@@ -14,10 +14,17 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
 
+  // Brick 컴포넌트 설정
   useEffect(() => {
-    console.log('containerRef', containerRef);
-    console.log('brickRefs', brickRefs);
-  }, [brickRefs]);
+    brickRefs.forEach((el, index) => {
+      const wrapEl = wrapRefs[index].current;
+
+      if (el.current && wrapEl) {
+        el.current.style.width = columnWidth + 'px';
+        el.current.style.height = wrapEl.clientHeight + 'px';
+      }
+    });
+  }, [brickRefs, wrapRefs, columnWidth]);
 
   // Wrap 컴포넌트 설정
   useEffect(() => {
