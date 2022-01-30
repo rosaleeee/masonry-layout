@@ -15,10 +15,20 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
 
   useEffect(() => {
-    console.log(containerRef);
-    console.log(brickRefs);
-    console.log(wrapRefs);
-  }, [brickRefs, wrapRefs]);
+    console.log('containerRef', containerRef);
+    console.log('brickRefs', brickRefs);
+  }, [brickRefs]);
+
+  // Wrap 컴포넌트 설정
+  useEffect(() => {
+    wrapRefs.forEach((el) => {
+      if (el.current) {
+        el.current.style.paddingLeft = columnGap / 2 + 'px';
+        el.current.style.paddingRight = columnGap / 2 + 'px';
+        el.current.style.paddingBottom = rowGap + 'px';
+      }
+    });
+  }, [wrapRefs, columnGap, rowGap]);
 
   return (
     <div id="masonry">
