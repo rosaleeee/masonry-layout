@@ -7,9 +7,10 @@ type MasonryLayoutProps = {
   columnWidth: number;
   columnGap: number;
   rowGap: number;
+  photosRef: React.RefObject<HTMLDivElement>;
 };
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap }) => {
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap, photosRef }) => {
   const [currentColumnCount, setCurrentColumnCount] = useState(0);
 
   const masonryLayoutRef = useRef<HTMLDivElement>(null);
@@ -115,15 +116,17 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
-      <Container containerRef={containerRef}>
-        {React.Children.map(children, (child, index) => {
-          return (
-            <Brick key={index} brickRefs={brickRefs}>
-              <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
-            </Brick>
-          );
-        })}
-      </Container>
+      <div ref={photosRef}>
+        <Container containerRef={containerRef}>
+          {React.Children.map(children, (child, index) => {
+            return (
+              <Brick key={index} brickRefs={brickRefs}>
+                <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
+              </Brick>
+            );
+          })}
+        </Container>
+      </div>
     </div>
   );
 };
