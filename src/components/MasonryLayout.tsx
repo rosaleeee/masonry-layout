@@ -28,7 +28,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
         wrapEl.style.paddingBottom = rowGap + 'px';
       }
     });
-  }, [wrapRefs, columnGap, rowGap]);
+  }, [wrapRefs, columnGap, rowGap, children]);
 
   // Brick 컴포넌트 설정
   useEffect(() => {
@@ -45,7 +45,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
         brickEl.style.height = wrapEl.clientHeight + 'px';
       }
     });
-  }, [brickRefs, wrapRefs, columnWidth, columnGap]);
+  }, [brickRefs, wrapRefs, columnWidth, columnGap, children]);
 
   // Container 컴포넌트 설정
   useEffect(() => {
@@ -76,7 +76,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     return () => {
       window.removeEventListener('resize', setColumnCount);
     };
-  }, [columnWidth, columnGap, currentColumnCount]);
+  }, [columnWidth, columnGap, currentColumnCount, children]);
 
   useEffect(() => {
     if (!currentColumnCount) return;
@@ -111,7 +111,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
       containerEl.style.width = containerWidth + 'px';
       containerEl.style.height = containerHeight + 'px';
     }
-  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap]);
+  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap, children]);
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
