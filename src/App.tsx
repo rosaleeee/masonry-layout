@@ -52,7 +52,17 @@ const App: React.FC = () => {
   }, [futherRequest, unsplashService]);
 
   return (
-    <MasonryLayout columnWidth={270} columnGap={20} rowGap={30} photosRef={photosRef}>
+    <MasonryLayout
+      columnGap={20}
+      rowGap={30}
+      photosRef={photosRef}
+      breakPointOption={{
+        default: 4,
+        1200: 3,
+        780: 2,
+        510: 1,
+      }}
+    >
       {photos.length && photos.map((p) => <Photo key={p.id} imageUrl={p.imageUrl} description={p.description} />)}
     </MasonryLayout>
   );

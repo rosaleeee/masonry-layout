@@ -1,23 +1,60 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Utils from '../utils/Utils';
 import Brick from './Brick';
 import Container from './Container';
 import Wrap from './Wrap';
 
+export interface breakPointColumns {
+  [key: number | string]: number;
+}
+
 type MasonryLayoutProps = {
-  columnWidth: number;
   columnGap: number;
   rowGap: number;
   photosRef: React.RefObject<HTMLDivElement>;
+  breakPointOption: breakPointColumns;
 };
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap, photosRef }) => {
-  const [currentColumnCount, setCurrentColumnCount] = useState(0);
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, photosRef, breakPointOption }) => {
+  const [columnCount, setColumnCount] = useState(1);
+  const [columnWidth, setColumnWidth] = useState(0);
   const [reload, setReload] = useState(0);
 
   const masonryLayoutRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
+
+  const utils = useMemo(() => new Utils(), []);
+
+  // 칼럼 개수 설정
+  useEffect(() => {
+    const resizeHandler = () => {
+      const wWidth = window.innerWidth; // 윈도우 너비
+      setColumnCount(utils.caculateColumnCount(wWidth, breakPointOption));
+    };
+
+    resizeHandler();
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, [breakPointOption, utils]);
+
+  // 반응형 너비
+  useEffect(() => {
+    const resizeHandler = () => {
+      if (masonryLayoutRef.current) {
+        const scrollBarWidth = 15; // 스크롤바 너비
+        const lWidth =
+          parseInt(window.getComputedStyle(masonryLayoutRef.current).getPropertyValue('width')) - scrollBarWidth || 0; // layout 너비
+        const cWidth = lWidth / columnCount; // 칼럼 너비
+        setColumnWidth(cWidth);
+      }
+    };
+
+    resizeHandler();
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, [masonryLayoutRef, columnCount]);
 
   // Wrap 컴포넌트 설정
   useEffect(() => {
@@ -37,7 +74,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     brickRefs.forEach((el, index) => {
       const brickEl = el.current;
       const wrapEl = wrapRefs[index].current;
-      const cellWidth = columnWidth + columnGap;
+      const cellWidth = columnWidth;
 
       // 이미지가 있다면 이미지 로딩 후, reload를 업데이트함으로써 Brick 컴포넌트 설정 및 배치
       if (brickEl && wrapEl) {
@@ -51,13 +88,12 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
             brickEl.style.height = wrapEl.clientHeight + 'px';
             setReload((prev) => prev + 1);
           });
-        } else {
-          brickEl.style.position = 'absolute';
-          brickEl.style.left = 0 + 'px';
-          brickEl.style.top = 0 + 'px';
-          brickEl.style.width = cellWidth + 'px';
-          brickEl.style.height = wrapEl.clientHeight + 'px';
         }
+        brickEl.style.position = 'absolute';
+        brickEl.style.left = 0 + 'px';
+        brickEl.style.top = 0 + 'px';
+        brickEl.style.width = cellWidth + 'px';
+        brickEl.style.height = wrapEl.clientHeight + 'px';
       }
     });
   }, [brickRefs, wrapRefs, columnWidth, columnGap, children]);
@@ -71,34 +107,12 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     }
   }, []);
 
-  // 칼럼 개수 설정
   useEffect(() => {
-    const masonryLayoutEl = masonryLayoutRef.current;
+    if (!columnCount) return;
 
-    function setColumnCount() {
-      if (masonryLayoutEl) {
-        const cellWidth = columnWidth + columnGap;
-        const nextColumnCount = Math.floor(masonryLayoutEl.clientWidth / cellWidth);
-
-        if (nextColumnCount !== currentColumnCount) {
-          setCurrentColumnCount(nextColumnCount);
-        }
-      }
-    }
-
-    setColumnCount();
-    window.addEventListener('resize', setColumnCount);
-    return () => {
-      window.removeEventListener('resize', setColumnCount);
-    };
-  }, [columnWidth, columnGap, currentColumnCount, children]);
-
-  useEffect(() => {
-    if (!currentColumnCount) return;
-
-    const rowPos = Array(currentColumnCount).fill(0);
-    const columnPos = Array(currentColumnCount).fill(0);
-    const cellWidth = columnWidth + columnGap;
+    const rowPos = Array(columnCount).fill(0);
+    const columnPos = Array(columnCount).fill(0);
+    const cellWidth = columnWidth;
 
     rowPos.forEach((_, index) => (rowPos[index] = cellWidth * index));
 
@@ -120,13 +134,13 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
     // Container 컴포넌트 크기 설정
     const containerEl = containerRef.current;
     if (containerEl) {
-      const containerWidth = cellWidth * currentColumnCount;
+      const containerWidth = cellWidth * columnCount;
       const containerHeight = Math.max.apply(null, columnPos);
 
       containerEl.style.width = containerWidth + 'px';
       containerEl.style.height = containerHeight + 'px';
     }
-  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap, children, reload]);
+  }, [columnCount, containerRef, brickRefs, columnWidth, columnGap, children, reload]);
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
