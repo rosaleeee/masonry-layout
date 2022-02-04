@@ -11,11 +11,10 @@ export interface breakPointColumns {
 type MasonryLayoutProps = {
   columnGap: number;
   rowGap: number;
-  photosRef: React.RefObject<HTMLDivElement>;
   breakPointOption: breakPointColumns;
 };
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, photosRef, breakPointOption }) => {
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
   const [columnCount, setColumnCount] = useState(1);
   const [columnWidth, setColumnWidth] = useState(0);
   const [reload, setReload] = useState(0);
@@ -144,17 +143,15 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
-      <div ref={photosRef}>
-        <Container containerRef={containerRef}>
-          {React.Children.map(children, (child, index) => {
-            return (
-              <Brick key={index} brickRefs={brickRefs}>
-                <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
-              </Brick>
-            );
-          })}
-        </Container>
-      </div>
+      <Container containerRef={containerRef}>
+        {React.Children.map(children, (child, index) => {
+          return (
+            <Brick key={index} brickRefs={brickRefs}>
+              <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
+            </Brick>
+          );
+        })}
+      </Container>
     </div>
   );
 };
