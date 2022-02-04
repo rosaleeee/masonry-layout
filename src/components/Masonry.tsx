@@ -12,9 +12,10 @@ type MasonryProps = {
   columnGap: number;
   rowGap: number;
   breakPointOption: breakPointColumns;
+  loadMoreRef: React.RefObject<HTMLDivElement>;
 };
 
-const Masonry: React.FC<MasonryProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
+const Masonry: React.FC<MasonryProps> = ({ children, columnGap, rowGap, breakPointOption, loadMoreRef }) => {
   const [columnCount, setColumnCount] = useState(1);
   const [columnWidth, setColumnWidth] = useState(0);
   const [reload, setReload] = useState(0);
@@ -143,15 +144,17 @@ const Masonry: React.FC<MasonryProps> = ({ children, columnGap, rowGap, breakPoi
 
   return (
     <div id="masonry" ref={masonryRef}>
-      <Container containerRef={containerRef}>
-        {React.Children.map(children, (child, index) => {
-          return (
-            <Brick key={index} brickRefs={brickRefs}>
-              <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
-            </Brick>
-          );
-        })}
-      </Container>
+      <div id="loadMore" ref={loadMoreRef}>
+        <Container containerRef={containerRef}>
+          {React.Children.map(children, (child, index) => {
+            return (
+              <Brick key={index} brickRefs={brickRefs}>
+                <Wrap wrapRefs={wrapRefs}>{child}</Wrap>
+              </Brick>
+            );
+          })}
+        </Container>
+      </div>
     </div>
   );
 };
