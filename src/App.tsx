@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import MasonryLayout from './components/MasonryLayout';
+import Masonry from './components/Masonry';
 import Photo from './components/Photo';
 import { ResponseGetImage } from './services/Unsplash/models';
 import UnsplashService from './services/Unsplash/UnsplashService';
@@ -15,7 +15,7 @@ const App: React.FC = () => {
   }, [unsplashService]);
 
   return (
-    <MasonryLayout
+    <Masonry
       columnGap={20}
       rowGap={30}
       breakPointOption={{
@@ -26,7 +26,7 @@ const App: React.FC = () => {
       }}
     >
       {photos.length && photos.map((p) => <Photo key={p.id} imageUrl={p.imageUrl} description={p.description} />)}
-    </MasonryLayout>
+    </Masonry>
   );
 };
 

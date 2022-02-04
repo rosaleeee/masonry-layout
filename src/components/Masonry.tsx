@@ -8,18 +8,18 @@ export interface breakPointColumns {
   [key: number | string]: number;
 }
 
-type MasonryLayoutProps = {
+type MasonryProps = {
   columnGap: number;
   rowGap: number;
   breakPointOption: breakPointColumns;
 };
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
+const Masonry: React.FC<MasonryProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
   const [columnCount, setColumnCount] = useState(1);
   const [columnWidth, setColumnWidth] = useState(0);
   const [reload, setReload] = useState(0);
 
-  const masonryLayoutRef = useRef<HTMLDivElement>(null);
+  const masonryRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const brickRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
   const wrapRefs: React.RefObject<HTMLDivElement>[] = useMemo(() => [], []);
@@ -41,10 +41,10 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
   // 반응형 너비
   useEffect(() => {
     const resizeHandler = () => {
-      if (masonryLayoutRef.current) {
+      if (masonryRef.current) {
         const scrollBarWidth = 15; // 스크롤바 너비
         const lWidth =
-          parseInt(window.getComputedStyle(masonryLayoutRef.current).getPropertyValue('width')) - scrollBarWidth || 0; // layout 너비
+          parseInt(window.getComputedStyle(masonryRef.current).getPropertyValue('width')) - scrollBarWidth || 0; // layout 너비
         const cWidth = lWidth / columnCount; // 칼럼 너비
         setColumnWidth(cWidth);
       }
@@ -53,7 +53,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
     resizeHandler();
     window.addEventListener('resize', resizeHandler);
     return () => window.removeEventListener('resize', resizeHandler);
-  }, [masonryLayoutRef, columnCount]);
+  }, [masonryRef, columnCount]);
 
   // Wrap 컴포넌트 설정
   useEffect(() => {
@@ -142,7 +142,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
   }, [columnCount, containerRef, brickRefs, columnWidth, columnGap, children, reload]);
 
   return (
-    <div id="masonry" ref={masonryLayoutRef}>
+    <div id="masonry" ref={masonryRef}>
       <Container containerRef={containerRef}>
         {React.Children.map(children, (child, index) => {
           return (
@@ -156,4 +156,4 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
   );
 };
 
-export default MasonryLayout;
+export default Masonry;

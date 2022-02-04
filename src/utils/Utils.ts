@@ -1,4 +1,4 @@
-import { breakPointColumns } from '../components/MasonryLayout';
+import { breakPointColumns } from '../components/Masonry';
 
 class Utils {
   public generateRandomNum(min: number, max: number): number {
