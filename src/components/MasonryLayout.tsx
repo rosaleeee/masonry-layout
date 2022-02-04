@@ -12,6 +12,7 @@ type MasonryLayoutProps = {
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, columnGap, rowGap, photosRef }) => {
   const [currentColumnCount, setCurrentColumnCount] = useState(0);
+  const [reload, setReload] = useState(0);
 
   const masonryLayoutRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,12 +39,25 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
       const wrapEl = wrapRefs[index].current;
       const cellWidth = columnWidth + columnGap;
 
+      // 이미지가 있다면 이미지 로딩 후, reload를 업데이트함으로써 Brick 컴포넌트 설정 및 배치
       if (brickEl && wrapEl) {
-        brickEl.style.position = 'absolute';
-        brickEl.style.left = 0 + 'px';
-        brickEl.style.top = 0 + 'px';
-        brickEl.style.width = cellWidth + 'px';
-        brickEl.style.height = wrapEl.clientHeight + 'px';
+        const imgEl = wrapEl.querySelector('img');
+        if (imgEl) {
+          imgEl.addEventListener('load', () => {
+            brickEl.style.position = 'absolute';
+            brickEl.style.left = 0 + 'px';
+            brickEl.style.top = 0 + 'px';
+            brickEl.style.width = cellWidth + 'px';
+            brickEl.style.height = wrapEl.clientHeight + 'px';
+            setReload((prev) => prev + 1);
+          });
+        } else {
+          brickEl.style.position = 'absolute';
+          brickEl.style.left = 0 + 'px';
+          brickEl.style.top = 0 + 'px';
+          brickEl.style.width = cellWidth + 'px';
+          brickEl.style.height = wrapEl.clientHeight + 'px';
+        }
       }
     });
   }, [brickRefs, wrapRefs, columnWidth, columnGap, children]);
@@ -112,7 +126,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnWidth, co
       containerEl.style.width = containerWidth + 'px';
       containerEl.style.height = containerHeight + 'px';
     }
-  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap, children]);
+  }, [currentColumnCount, containerRef, brickRefs, columnWidth, columnGap, children, reload]);
 
   return (
     <div id="masonry" ref={masonryLayoutRef}>
