@@ -5,9 +5,18 @@ type MasonryLayoutProps = {
   columnGap: number;
   rowGap: number;
   breakPointOption: breakPointColumns;
+  dataLength: number;
+  callback: () => void;
 };
 
-const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
+const MasonryLayout: React.FC<MasonryLayoutProps> = ({
+  children,
+  columnGap,
+  rowGap,
+  breakPointOption,
+  dataLength,
+  callback,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -28,7 +37,8 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
         const height = loadMoreEl.clientHeight;
         const offsetBottom = offsetTop + height;
 
-        if (wScrollBottom >= offsetBottom) {
+        if (!loading && wScrollBottom >= offsetBottom) {
+          callback && callback();
           setLoading(true);
         }
       }
@@ -36,18 +46,19 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
 
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
-  }, []);
+  }, [loading, callback]);
 
   useEffect(() => {
-    if (loading) {
-      console.log('loading...');
-    }
-  }, [loading]);
+    setLoading(false);
+  }, [dataLength]);
 
   return (
-    <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
-      {children}
-    </Masonry>
+    <div id="masonryLayout">
+      <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
+        {children}
+      </Masonry>
+      {loading && <h2 style={{ textAlign: 'center' }}>loading...</h2>}
+    </div>
   );
 };
 

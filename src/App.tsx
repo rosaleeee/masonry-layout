@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MasonryLayout from './components/MasonryLayout';
 import Photo from './components/Photo';
 import { ResponseGetImage } from './services/Unsplash/models';
@@ -6,11 +6,20 @@ import UnsplashService from './services/Unsplash/UnsplashService';
 
 const App: React.FC = () => {
   const [photos, setPhotos] = useState<ResponseGetImage[]>([]);
+  const pageIndex = useRef(1);
   const unsplashService = useMemo(() => new UnsplashService(), []);
 
   useEffect(() => {
     unsplashService.getImages().then((res) => {
+      pageIndex.current += 1;
       setPhotos(res);
+    });
+  }, [unsplashService]);
+
+  const fetchMoreData = useCallback(() => {
+    unsplashService.getImages(pageIndex.current).then((res) => {
+      pageIndex.current += 1;
+      setTimeout(() => setPhotos((p) => p.concat(...res)), 2000);
     });
   }, [unsplashService]);
 
@@ -24,6 +33,8 @@ const App: React.FC = () => {
         780: 2,
         510: 1,
       }}
+      dataLength={photos.length}
+      callback={fetchMoreData}
     >
       {photos.length && photos.map((p) => <Photo key={p.id} imageUrl={p.imageUrl} description={p.description} />)}
     </MasonryLayout>
