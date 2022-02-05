@@ -35,6 +35,7 @@ const App: React.FC = () => {
       }}
       dataLength={photos.length}
       callback={fetchMoreData}
+      threshold={300}
     >
       {photos.length && photos.map((p) => <Photo key={p.id} imageUrl={p.imageUrl} description={p.description} />)}
     </MasonryLayout>

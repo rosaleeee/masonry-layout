@@ -7,6 +7,7 @@ type MasonryLayoutProps = {
   breakPointOption: breakPointColumns;
   dataLength: number;
   callback: () => void;
+  threshold?: number;
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({
@@ -16,6 +17,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
   breakPointOption,
   dataLength,
   callback,
+  threshold = 0,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +37,11 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
         // loadMoreEl sizes
         const offsetTop = loadMoreEl.offsetTop;
         const height = loadMoreEl.clientHeight;
-        const offsetBottom = offsetTop + height;
+        let offsetBottom = offsetTop + height;
+
+        if (threshold) {
+          offsetBottom -= threshold;
+        }
 
         if (!loading && wScrollBottom >= offsetBottom) {
           callback && callback();
@@ -46,7 +52,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
 
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
-  }, [loading, callback]);
+  }, [loading, callback, threshold]);
 
   useEffect(() => {
     setLoading(false);
