@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Masonry, { breakPointColumns } from './Masonry';
 
 type MasonryLayoutProps = {
@@ -8,6 +8,8 @@ type MasonryLayoutProps = {
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowGap, breakPointOption }) => {
+  const [loading, setLoading] = useState(false);
+
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // infinity scrolling
@@ -27,15 +29,20 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ children, columnGap, rowG
         const offsetBottom = offsetTop + height;
 
         if (wScrollBottom >= offsetBottom) {
-          console.log(true);
+          setLoading(true);
         }
       }
     };
 
-    scrollHandler();
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
   }, []);
+
+  useEffect(() => {
+    if (loading) {
+      console.log('loading...');
+    }
+  }, [loading]);
 
   return (
     <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
