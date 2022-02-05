@@ -8,6 +8,7 @@ type MasonryLayoutProps = {
   dataLength: number;
   callback: () => void;
   threshold?: number;
+  customLoader?: JSX.Element;
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({
@@ -18,6 +19,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
   dataLength,
   callback,
   threshold = 0,
+  customLoader,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +65,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
       <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
         {children}
       </Masonry>
-      {loading && <h2 style={{ textAlign: 'center' }}>loading...</h2>}
+      {(loading && customLoader) || <h2 style={{ textAlign: 'center' }}>loading...</h2>}
     </div>
   );
 };
