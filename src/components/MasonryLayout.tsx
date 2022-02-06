@@ -65,7 +65,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
       <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
         {children}
       </Masonry>
-      {(loading && customLoader) || <h2 style={{ textAlign: 'center' }}>loading...</h2>}
+      {loading && (customLoader || <h2 style={{ textAlign: 'center' }}>loading...</h2>)}
     </div>
   );
 };
