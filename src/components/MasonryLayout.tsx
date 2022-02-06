@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Masonry, { breakPointColumns } from './Masonry';
+
+type FetchMoreOption = {
+  dataLength: number;
+  callback: () => void;
+  threshold?: number;
+  customLoader?: JSX.Element;
+};
 
 type MasonryLayoutProps = {
   columnGap: number;
   rowGap: number;
   breakPointOption: breakPointColumns;
-  dataLength: number;
-  callback: () => void;
-  threshold?: number;
-  customLoader?: JSX.Element;
+  fetchMoreOption?: FetchMoreOption;
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({
@@ -16,17 +20,24 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
   columnGap,
   rowGap,
   breakPointOption,
-  dataLength,
-  callback,
-  threshold = 0,
-  customLoader,
+  fetchMoreOption,
 }) => {
   const [loading, setLoading] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
+  const option = useMemo(() => {
+    return {
+      threshold: 0,
+      customLoader: null,
+      ...fetchMoreOption,
+    };
+  }, [fetchMoreOption]);
+
   // infinity scrolling
   useEffect(() => {
+    if (!fetchMoreOption) return;
+
     const scrollHandler = () => {
       const loadMoreEl = loadMoreRef.current;
 
@@ -41,12 +52,12 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
         const height = loadMoreEl.clientHeight;
         let offsetBottom = offsetTop + height;
 
-        if (threshold) {
-          offsetBottom -= threshold;
+        if (option.threshold) {
+          offsetBottom -= option.threshold;
         }
 
         if (!loading && wScrollBottom >= offsetBottom) {
-          callback && callback();
+          option.callback && option.callback();
           setLoading(true);
         }
       }
@@ -54,18 +65,18 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
 
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
-  }, [loading, callback, threshold]);
+  }, [loading, option.callback, option.threshold, option, fetchMoreOption]);
 
   useEffect(() => {
     setLoading(false);
-  }, [dataLength]);
+  }, [option.dataLength]);
 
   return (
     <div id="masonryLayout">
       <Masonry columnGap={columnGap} rowGap={rowGap} breakPointOption={breakPointOption} loadMoreRef={loadMoreRef}>
         {children}
       </Masonry>
-      {loading && (customLoader || <h2 style={{ textAlign: 'center' }}>loading...</h2>)}
+      {loading && (option.customLoader || <h2 style={{ textAlign: 'center' }}>loading...</h2>)}
     </div>
   );
 };

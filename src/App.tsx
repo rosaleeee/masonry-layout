@@ -33,10 +33,12 @@ const App: React.FC = () => {
         780: 2,
         510: 1,
       }}
-      dataLength={photos.length}
-      callback={fetchMoreData}
-      threshold={50}
-      customLoader={<h1>Custom Loader...</h1>}
+      fetchMoreOption={{
+        dataLength: photos.length,
+        callback: fetchMoreData,
+        threshold: 200,
+        customLoader: <h1>Custom Loader...</h1>,
+      }}
     >
       {photos.length && photos.map((p) => <Photo key={p.id} imageUrl={p.imageUrl} description={p.description} />)}
     </MasonryLayout>
