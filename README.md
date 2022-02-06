@@ -37,5 +37,5 @@ const App: React.FC = () => {
 |---|---|---|---|
 |`columnGap`|optional|20|column 사이의 간격을 나타낸다. (단위 px)|
 |`rowGap`|optional|20|row 사이의 간격을 나타낸다. (단위 px)|
-|`breakPointOption`|optional|`{ default: 5, 1200: 3, 780: 2, 510: 1 }`|break point마다 생성되는 칼럼의 개수이다. (기본 값을 예로들면 화면의 너비가 0~510일 때 칼럼의 개수는 1, 511~780일 때 칼럼의 개수는 2, 781~1200일 때 칼럼의 개수는 3), 1201~일 때 칼럼의 개수는 5이다.)|
+|`breakPointOption`|optional|`{ default: 5, 1200: 3, 780: 2, 510: 1 }`|break point마다 생성되는 칼럼의 개수이다. (기본 값을 예로들면 화면의 너비가 `0px~510px`일 때 칼럼의 개수는 1, `511px~780px`일 때 칼럼의 개수는 2, `781px~1200px`일 때 칼럼의 개수는 3), `1201px~`일 때 칼럼의 개수는 5이다.)|
 
