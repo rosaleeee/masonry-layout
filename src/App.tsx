@@ -28,10 +28,11 @@ const App: React.FC = () => {
       columnGap={20}
       rowGap={30}
       breakPointOption={{
-        default: 4,
-        1200: 3,
-        780: 2,
-        510: 1,
+        default: 5,
+        1200: 4,
+        780: 3,
+        580: 2,
+        380: 1,
       }}
       fetchMoreOption={{
         dataLength: photos.length,

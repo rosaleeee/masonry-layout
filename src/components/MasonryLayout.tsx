@@ -9,17 +9,22 @@ type FetchMoreOption = {
 };
 
 type MasonryLayoutProps = {
-  columnGap: number;
-  rowGap: number;
-  breakPointOption: breakPointColumns;
+  columnGap?: number;
+  rowGap?: number;
+  breakPointOption?: breakPointColumns;
   fetchMoreOption?: FetchMoreOption;
 };
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({
   children,
-  columnGap,
-  rowGap,
-  breakPointOption,
+  columnGap = 20,
+  rowGap = 20,
+  breakPointOption = {
+    default: 5,
+    1200: 3,
+    780: 2,
+    510: 1,
+  },
   fetchMoreOption,
 }) => {
   const [loading, setLoading] = useState(false);
