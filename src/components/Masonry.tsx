@@ -43,7 +43,7 @@ const Masonry: React.FC<MasonryProps> = ({ children, columnGap, rowGap, breakPoi
   useEffect(() => {
     const resizeHandler = () => {
       if (masonryRef.current) {
-        const scrollBarWidth = 15; // 스크롤바 너비
+        const scrollBarWidth = 0; // 스크롤바 너비
         const lWidth =
           parseInt(window.getComputedStyle(masonryRef.current).getPropertyValue('width')) - scrollBarWidth || 0; // layout 너비
         const cWidth = lWidth / columnCount; // 칼럼 너비
