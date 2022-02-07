@@ -67,7 +67,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({
         }
       }
     };
-
+    scrollHandler();
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [loading, option.callback, option.threshold, option, fetchMoreOption]);

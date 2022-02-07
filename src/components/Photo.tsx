@@ -9,7 +9,7 @@ const Photo: React.FC<PhotoProps> = ({ imageUrl, description }) => {
   return (
     <div>
       <img src={imageUrl} alt="사진" style={{ width: '100%' }} />
-      <p>{description}</p>
+      {/* <p>{description}</p> */}
     </div>
   );
 };
